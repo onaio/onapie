@@ -4,7 +4,7 @@ class ApiException(Exception):
         self.msg = msg
         if response is not None:
             self.api_response = response
-            self.msg = u'Api Error: {}, {}'.format(
+            self.msg = u'{}, {}'.format(
                 self.api_response.status_code, self.api_response.reason)
         self.api_response = response
         Exception.__init__(self, msg)

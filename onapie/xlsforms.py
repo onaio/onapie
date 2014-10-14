@@ -4,7 +4,7 @@ import json
 
 class XlsFormsManager(object):
 
-    def __init__(self, conn, api_entrypoint):
+    def __init__(self, conn, api_entrypoint=None):
         self.conn = conn
         self.api_ep = api_entrypoint or '/api/v1'
         self.forms_path = '{}/{}'.format(self.api_ep, 'forms')
