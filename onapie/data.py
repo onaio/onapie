@@ -1,4 +1,3 @@
-from onapie.exceptions import ClientException
 import json
 
 
@@ -33,16 +32,16 @@ class DataManager(object):
         elif any(tag_args):
             tags = tag_args[0]
             for tag in tag_args[1:]:
-                tags = '{}, {}'.format(tags, tag)
+                tags = '{},{}'.format(tags, tag)
             path = '{}?tags={}'.format(path, tags)
 
         return json.loads(self.conn.get(path).text)
 
     def delete(self, pk):
-        resp = self.conn.delete('{}/{}'.format(self.data_ep, pk))
+        resp = self.conn.delete('{}/{}'.format(self.data_ep, pk))  # noqa
 
-#TODO: Lets standardise delete responses to 204 when the  
-#      api has no response body for deletes.
+# TODO: Lets standardize delete responses to 204 when
+#       we have no response body for deletes.
 #
 #        if resp.status_code not in [204, 202]:
 #            raise ClientException(
@@ -51,4 +50,5 @@ class DataManager(object):
 
     def get_enketo_editlink(self, pk, dataid):
         return json.loads(
-            self.conn.get('{}/{}/{}/enketo'.format(self.data_ep, pk, dataid)).text)
+            self.conn.get(
+                '{}/{}/{}/enketo'.format(self.data_ep, pk, dataid)).text)

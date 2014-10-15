@@ -1,7 +1,6 @@
 from onapie.stats import StatsManager
 from onapie.utils import ConnectionSingleton
 from tests.utils import MockResponse
-import json
 import mock
 import unittest
 
@@ -22,6 +21,6 @@ class StatsMethodsTestCase(unittest.TestCase):
             mock_get.assert_called_with(
                 '{}/test_pk?'.format(self.stats_path))
 
-            self.sm.get('test_pk','methodX')
+            self.sm.get('test_pk', 'methodX')
             mock_get.assert_called_with(
                 '{}/test_pk?method=methodX'.format(self.stats_path))

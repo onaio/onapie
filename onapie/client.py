@@ -25,7 +25,7 @@ class Client(object):
         if kwargs.get('fetch_catalog', True):
             self.fetch_catalog()
 
-    def fetch_catalog(self)
+    def fetch_catalog(self):
         self.catalog = json.loads(self.conn.get(self.api_entrypoint).text)
 
         self.forms = XlsFormsManager(
@@ -36,9 +36,9 @@ class Client(object):
             self.conn, urlparse(self.catalog.get('stats')).path)
 
     def authenticate(self, username, password):
-        self.token_key = json.loads(self.conn.get(self.auth_path, None,
-                                    auth=(username,
-                                          password)).text).get('api_token')
+        self.token_key = json.loads(
+            self.conn.get(self.auth_path, None,
+                          auth=(username, password)).text).get('api_token')
         self.set_token_key(self.token_key)
         return self.token_key
 

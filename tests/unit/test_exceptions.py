@@ -9,7 +9,7 @@ class ExceptionsTestCase(unittest.TestCase):
         msglist = [str(ApiException('Test Message')),
                    str(ClientException('Test Message')),
                    'Test Message']
-        self.assertTrue(msglist[1:] == msglist[:-1], 
+        self.assertTrue(msglist[1:] == msglist[:-1],
                         u'Basic exception messages fail to print as expected.')
 
     def test_http_exception_messeges(self):
@@ -19,5 +19,5 @@ class ExceptionsTestCase(unittest.TestCase):
                    str(ClientException(None, resp)),
                    '404, Not Found']
 
-        self.assertTrue(msglist[1:] == msglist[:-1], 
+        self.assertTrue(msglist[1:] == msglist[:-1],
                         u'HTTP exception messages fail to print as expected.')

@@ -1,16 +1,17 @@
 from onapie.data import DataManager
 from onapie.utils import ConnectionSingleton
 from tests.utils import MockResponse
-import json
 import mock
 import unittest
+
 
 mock_http_call = mock.Mock()
 mock_http_call.return_value = MockResponse(200, 'OK', '{}')
 
-@mock.patch.multiple(ConnectionSingleton, 
-                get=mock_http_call,
-                delete=mock_http_call)
+
+@mock.patch.multiple(ConnectionSingleton,
+                     get=mock_http_call,
+                     delete=mock_http_call)
 class DataManagerTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -38,7 +39,7 @@ class DataManagerTestCase(unittest.TestCase):
     def test_get_data_by_query_call(self):
         self.datamgr.get('pk', None, foo1='bar1', foo2='bar2')
         self.conn.get.assert_called_with(
-            '%s/pk?query={"foo1": "bar1", "foo2": "bar2"}'%(self.path))
+            '%s/pk?query={"foo1": "bar1", "foo2": "bar2"}' % (self.path))
 
     def test_get_data_by_tag_call(self):
         self.datamgr.get('pk', None, 'foo1', 'bar1', 'foo2', 'bar2')
