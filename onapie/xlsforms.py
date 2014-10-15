@@ -4,11 +4,10 @@ import json
 
 class XlsFormsManager(object):
 
-    def __init__(self, conn, api_entrypoint=None):
+    def __init__(self, conn, api_entrypoint, exports_entrypoint=None):
         self.conn = conn
-        self.api_ep = api_entrypoint or '/api/v1'
-        self.forms_path = '{}/{}'.format(self.api_ep, 'forms')
-        self.exports_path = '{}/{}'.format(self.api_ep, 'exports')
+        self.forms_ep = api_entrypoint
+        self.exports_ep = 'exports'
 
     def upload(self, xls_path=None, xls_url=None, owner=None):
         """Uploads an XLSForm
@@ -32,7 +31,7 @@ class XlsFormsManager(object):
                                   'mutually exclusive!')
 
         return json.loads(self.conn.post('{}'.format(
-            self.forms_path), xls_path, xls_url).text)
+            self.forms_ep), xls_path, xls_url).text)
 
     def list(self, owner=None):
         """Returns a list of forms
@@ -41,7 +40,7 @@ class XlsFormsManager(object):
 
             Optional. Get forms by owner username
         """
-        query = '{}'.format(self.forms_path)
+        query = '{}'.format(self.forms_ep)
 
         if owner is not None:
             query = '{}?owner={}'.format(query, owner)
@@ -49,9 +48,9 @@ class XlsFormsManager(object):
         return json.loads(
             self.conn.get(query).text)
 
-    def get(self, pk, represetation=None, **tag_args):
+    def get(self, pk, represetation=None, *tag_args):
         """Get Form Information or representation"""
-        path = '{}/{}'.format(self.forms_path, pk)
+        path = '{}/{}'.format(self.forms_ep, pk)
 
         if represetation in ['json', 'xml', 'xls']:
             path = '{}/form.{}'.format(path, represetation)
@@ -71,7 +70,7 @@ class XlsFormsManager(object):
             'uuid={}&description={}&owner={}&public={}&public_data={}'.format(
                 uuid, description, owner, public, public_data)
 
-        return json.loads(self.conn.put('{}/{}'.format(self.forms_path, pk),
+        return json.loads(self.conn.put('{}/{}'.format(self.forms_ep, pk),
                           None, form).text)
 
     def patch(self, pk, **kwargs):
@@ -82,13 +81,13 @@ class XlsFormsManager(object):
             args = '{}&{}={}'.format(args, key, value)
 
         return json.loads(
-            self.conn.patch('{}/{}'.format(self.forms_path, pk),
+            self.conn.patch('{}/{}'.format(self.forms_ep, pk),
                             None, args).text)
 
     def delete(self, pk):
         """Deletes your form"""
 
-        resp = self.conn.delete('{}/{}'.format(self.forms_path, pk))
+        resp = self.conn.delete('{}/{}'.format(self.forms_ep, pk))
         if resp.status_code != 204:
             raise ClientException(
                 'Invalid api delete response: {}, {}'.format(
@@ -99,7 +98,7 @@ class XlsFormsManager(object):
         """Get list of Tags for a specific Form"""
 
         return json.loads(
-            self.conn.get('{}/{}/labels'.format(self.forms_path, pk)).text)
+            self.conn.get('{}/{}/labels'.format(self.forms_ep, pk)).text)
 
     def set_tag(self, pk, *tag_args):
         """Tag forms"""
@@ -107,22 +106,22 @@ class XlsFormsManager(object):
         tags = json.puts({'tags': tag_args})
 
         return json.loads(
-            self.conn.post('{}/{}/labels'.format(self.forms_path, pk),
+            self.conn.post('{}/{}/labels'.format(self.forms_ep, pk),
                            tags).text)
 
     def remove_tag(self, pk, tag):
         """Removes a tag"""
 
         return json.loads(
-            self.conn.delete('{}/{}/labels/{}'.format(self.forms_path,
+            self.conn.delete('{}/{}/labels/{}'.format(self.forms_ep,
                                                       pk, tag)).text)
 
     def get_webformlink(self, pk):
         return json.loads(
-            self.conn.get('{}/{}/enketo'.format(self.forms_path, pk)).text)
+            self.conn.get('{}/{}/enketo'.format(self.forms_ep, pk)).text)
 
     def get_formdata(self, pk, export_format):
-        return self.conn.get('{}/{}.{}'.format(self.exports_path,
+        return self.conn.get('{}/{}.{}'.format(self.exports_ep,
                                                pk, export_format),
                              stream=True).raw
 
@@ -134,7 +133,7 @@ class XlsFormsManager(object):
         if role in ['readonly', 'dataentry', 'editor', 'manager']:
             payload['role'] = role
 
-        resp = self.conn.post('{}/{}/share'.format(self.forms_path, pk),
+        resp = self.conn.post('{}/{}/share'.format(self.forms_ep, pk),
                               payload)
         if resp.status_code != 204:
             raise ClientException(
@@ -145,5 +144,5 @@ class XlsFormsManager(object):
         """Clone a form to a specific user account"""
 
         return json.loads(
-            self.conn.post('{}/{}/clone'.format(self.forms_path, pk),
+            self.conn.post('{}/{}/clone'.format(self.forms_ep, pk),
                            'username={}'.format(username)).text)

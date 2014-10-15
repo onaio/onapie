@@ -1,6 +1,9 @@
 import json
 from onapie.xlsforms import XlsFormsManager
+from onapie.data import DataManager
+from onapie.stats import StatsManager
 from onapie.utils import ConnectionSingleton
+from urlparse import urlparse
 
 
 class Client(object):
@@ -19,7 +22,16 @@ class Client(object):
         if all((username, password, not self.token_key)):
             self.authenticate(username, password)
 
-        self.forms = XlsFormsManager(self.conn, self.api_entrypoint)
+        #get endpoint catalog
+        self.catalog = json.loads(self.conn.get(self.api_entrypoint).text)
+
+        self.forms = XlsFormsManager(
+            self.conn,
+            urlparse(self.catalog.get('forms')).path)
+        self.data = DataManager(
+            self.conn, urlparse(self.catalog.get('data')).path)
+        self.stats = StatsManager(
+            self.conn, urlparse(self.catalog.get('stats')).path)
 
     def authenticate(self, username, password):
         self.token_key = json.loads(self.conn.get(self.auth_path, None,
