@@ -22,12 +22,14 @@ class Client(object):
         if all((username, password, not self.token_key)):
             self.authenticate(username, password)
 
-        #get endpoint catalog
+        if kwargs.get('fetch_catalog', True):
+            self.fetch_catalog()
+
+    def fetch_catalog(self)
         self.catalog = json.loads(self.conn.get(self.api_entrypoint).text)
 
         self.forms = XlsFormsManager(
-            self.conn,
-            urlparse(self.catalog.get('forms')).path)
+            self.conn, urlparse(self.catalog.get('forms')).path)
         self.data = DataManager(
             self.conn, urlparse(self.catalog.get('data')).path)
         self.stats = StatsManager(
