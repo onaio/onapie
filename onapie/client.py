@@ -4,6 +4,7 @@ from onapie.data import DataManager
 from onapie.stats import StatsManager
 from onapie.utils import ConnectionSingleton
 from urlparse import urlparse
+from requests.auth import HTTPDigestAuth
 
 
 class Client(object):
@@ -12,15 +13,17 @@ class Client(object):
         self.api_addr = api_addr
         username = kwargs.get('username', None)
         password = kwargs.get('password', None)
-        self.token_key = kwargs.get('token_key', None)
+        self.api_token = kwargs.get('api_token', None)
         self.api_entrypoint = kwargs.get('api_entrypoint', '/api/v1')
         auth_path = kwargs.get('auth_path', '/user')
         self.auth_path = '{}{}'.format(self.api_entrypoint, auth_path)
 
         self.conn = ConnectionSingleton(self.api_addr, **kwargs)
 
-        if all((username, password, not self.token_key)):
+        if all((username, password, not self.api_token)):
             self.authenticate(username, password)
+        elif self.api_token is not None:
+            self.set_api_token(self.api_token)
 
         if kwargs.get('fetch_catalog', True):
             self.fetch_catalog()
@@ -36,11 +39,12 @@ class Client(object):
             self.conn, urlparse(self.catalog.get('stats')).path)
 
     def authenticate(self, username, password):
-        self.token_key = json.loads(
+        self.api_token = json.loads(
             self.conn.get(self.auth_path, None,
-                          auth=(username, password)).text).get('api_token')
-        self.set_token_key(self.token_key)
-        return self.token_key
+                          auth=HTTPDigestAuth(
+                              username, password)).text).get('api_token')
+        self.set_api_token(self.api_token)
+        return self.api_token
 
-    def set_token_key(self, token_key):
-        self.conn.set_header('Authorization', 'Token {}'.format(token_key))
+    def set_api_token(self, api_token):
+        self.conn.set_header('Authorization', 'Token {}'.format(api_token))

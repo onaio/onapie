@@ -6,4 +6,4 @@ class TestStyle(TestCase):
 
     def test_flake8(self):
         result = call(['flake8', '--exclude', 'migrations,src', '.'])
-        self.assertEqual(result, 0, "Code is not flake8.")
+        self.assertEqual(result, 0, "Flake8 ain't happy with your code style.")

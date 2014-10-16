@@ -15,7 +15,7 @@ class Connection(object):
 
         self.headers = {}
         self.timeout = kwargs.get('timeout', 20)
-        self.read_timeout = kwargs.get('read_timeout', 20)
+        self.read_timeout = kwargs.get('read_timeout', 180)
         self.verify = bool(kwargs.get('ssl_verify', True))
         retries = kwargs.get('max_retries', 5)
 

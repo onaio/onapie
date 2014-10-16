@@ -9,7 +9,7 @@ class XlsFormsManager(object):
         self.forms_ep = api_entrypoint
         self.exports_ep = 'exports'
 
-    def upload(self, xls_path=None, xls_url=None, owner=None):
+    def create(self, xls_path=None, xls_url=None, owner=None):
         """Uploads an XLSForm
 
         .. attribute::xls_path
@@ -30,8 +30,8 @@ class XlsFormsManager(object):
                                   'for creation. The two args are '
                                   'mutually exclusive!')
 
-        return json.loads(self.conn.post('{}'.format(
-            self.forms_ep), xls_path, xls_url).text)
+        return json.loads(self.conn.post(self.forms_ep,
+                                         xls_path, xls_url).text)
 
     def list(self, owner=None):
         """Returns a list of forms
@@ -48,27 +48,32 @@ class XlsFormsManager(object):
         return json.loads(
             self.conn.get(query).text)
 
-    def get(self, pk, represetation=None, *tag_args):
+    def get(self, pk, representation=None, *tag_args):
         """Get Form Information or representation"""
         path = '{}/{}'.format(self.forms_ep, pk)
 
-        if represetation in ['json', 'xml', 'xls']:
-            path = '{}/form.{}'.format(path, represetation)
+        if representation is not None:
+            if representation not in ['json', 'xml', 'xls']:
+                raise ClientException(
+                    'Invalid representation:- {}. Options are '
+                    'json, xml or xls'.format(representation))
+            path = '{}/form.{}'.format(path, representation)
 
-        tags = 'tags='
-        for tag in tag_args:
-            tags = '{},'.format(tags, tag)
+        if any(tag_args):
+            tags = tag_args[0]
+            for tag in tag_args[1:]:
+                tags = '{},{}'.format(tags, tag)
 
-        path = '{}?{}'.format(path, tags)
+            path = '{}?tags={}'.format(path, tags)
 
         return json.loads(self.conn.get(path).text)
 
     def update(self, pk, uuid, description, owner, public, public_data):
         """Update Form"""
 
-        form = \
-            'uuid={}&description={}&owner={}&public={}&public_data={}'.format(
-                uuid, description, owner, public, public_data)
+        form = ('uuid={}&description={}&owner={}'
+                '&public={}&public_data={}').format(uuid, description, owner,
+                                                    public, public_data)
 
         return json.loads(self.conn.put('{}/{}'.format(self.forms_ep, pk),
                           None, form).text)
@@ -76,8 +81,8 @@ class XlsFormsManager(object):
     def patch(self, pk, **kwargs):
         """Update Form Properties"""
 
-        args = ''
-        for key, value in kwargs.items():
+        args = '{}={}'.format(*kwargs.items()[0])
+        for key, value in kwargs.items()[1:]:
             args = '{}&{}={}'.format(args, key, value)
 
         return json.loads(
