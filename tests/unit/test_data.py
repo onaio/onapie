@@ -46,9 +46,10 @@ class DataManagerTestCase(unittest.TestCase):
         self.conn.get.assert_called_with(
             '{}/pk?tags=foo1,bar1,foo2,bar2'.format(self.path))
 
-    def test_delete_data_call(self):
-        self.datamgr.delete('pk')
-        self.conn.delete.assert_called_with('{}/pk'.format(self.path))
+    def test_delete_data_tag_call(self):
+        self.datamgr.delete_tag('pk', 'data_id', 'tag')
+        self.conn.delete.assert_called_with(
+            '{}/pk/data_id/labels/tag'.format(self.path))
 
     def test_get_enketo_editlink_call(self):
         self.datamgr.get_enketo_editlink('pk', 'dataid')

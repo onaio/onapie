@@ -37,18 +37,11 @@ class DataManager(object):
 
         return json.loads(self.conn.get(path).text)
 
-    def delete(self, pk):
-        resp = self.conn.delete('{}/{}'.format(self.data_ep, pk))  # noqa
-
-# TODO: Lets standardize delete responses to 204 when
-#       we have no response body for deletes.
-#
-#        if resp.status_code not in [204, 202]:
-#            raise ClientException(
-#                'Invalid api delete response: {}, {}'.format(
-#                    resp.status_code, resp.reason))
+    def delete_tag(self, pk, data_id, tag_name):
+        return json.loads(
+            self.conn.delete('{}/{}/{}/labels/{}'.format(
+                self.data_ep, pk, data_id, tag_name)).text)
 
     def get_enketo_editlink(self, pk, dataid):
-        return json.loads(
-            self.conn.get(
-                '{}/{}/{}/enketo'.format(self.data_ep, pk, dataid)).text)
+        return json.loads(self.conn.get(
+            '{}/{}/{}/enketo'.format(self.data_ep, pk, dataid)).text)

@@ -40,7 +40,7 @@ class XlsFormsManager(object):
 
             Optional. Get forms by owner username
         """
-        query = '{}'.format(self.forms_ep)
+        query = self.forms_ep
 
         if owner is not None:
             query = '{}?owner={}'.format(query, owner)
@@ -108,7 +108,7 @@ class XlsFormsManager(object):
     def set_tag(self, pk, *tag_args):
         """Tag forms"""
 
-        tags = json.puts({'tags': tag_args})
+        tags = json.dumps({'tags': tag_args})
 
         return json.loads(
             self.conn.post('{}/{}/labels'.format(self.forms_ep, pk),
@@ -126,9 +126,8 @@ class XlsFormsManager(object):
             self.conn.get('{}/{}/enketo'.format(self.forms_ep, pk)).text)
 
     def get_formdata(self, pk, export_format):
-        return self.conn.get('{}/{}.{}'.format(self.exports_ep,
-                                               pk, export_format),
-                             stream=True).raw
+        # TODO: Implement when API behaves
+        raise ClientException('This has not Implemented.')
 
     def share(self, pk, username, role):
         """Share a form with a specific user"""
@@ -138,12 +137,9 @@ class XlsFormsManager(object):
         if role in ['readonly', 'dataentry', 'editor', 'manager']:
             payload['role'] = role
 
-        resp = self.conn.post('{}/{}/share'.format(self.forms_ep, pk),
-                              payload)
-        if resp.status_code != 204:
-            raise ClientException(
-                'Invalid api form share response: {}, {}'.format(
-                    resp.status_code, resp.reason))
+        return json.loads(
+            self.conn.post('{}/{}/share'.format(self.forms_ep, pk),
+                           payload).text)
 
     def clone_to_user(self, pk, username):
         """Clone a form to a specific user account"""

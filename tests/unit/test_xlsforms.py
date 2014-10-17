@@ -1,9 +1,11 @@
+import json
+import mock
+import unittest
+
 from onapie.xlsforms import XlsFormsManager
 from onapie.exceptions import ClientException
 from onapie.utils import ConnectionSingleton
 from tests.utils import MockResponse
-import mock
-import unittest
 from random import choice
 
 
@@ -92,6 +94,40 @@ class XlsFormsManagerTestCase(unittest.TestCase):
             with self.assertRaises(ClientException):
                 self.xlsmgr.delete('pk')
 
-    def test_delete(self):
+    def test_delete_call(self):
         self.xlsmgr.delete('pk')
         self.conn.delete.assert_called_with('{}/pk'.format(self.path))
+
+    def test_get_tags_call(self):
+        self.xlsmgr.get_tags('pk')
+        self.conn.get.assert_called_with('{}/pk/labels'.format(self.path))
+
+    def test_set_tags_call(self):
+        self.xlsmgr.set_tag('pk', 'foo1', 'bar1', 'foo2', 'bar2')
+        self.conn.get.assert_called_with(
+            '{}/pk/labels'.format(self.path),
+            json.dumps({'tags': ['foo1', 'bar1', 'foo2', 'bar2']}))
+
+    def test_remove_tag(self):
+        self.xlsmgr.remove_tag('pk', 'foo1')
+        self.conn.delete.assert_called_with(
+            '{}/pk/labels/foo1'.format(self.path))
+
+    def test_get_webformlink(self):
+        self.xlsmgr.get_webformlink('pk')
+        self.conn.get.assert_called_with('{}/pk/enketo'.format(self.path))
+
+    def test_get_formdata(self):
+        # TODO implement when API behaves
+        with self.assertRaises(ClientException):
+            self.xlsmgr.get_formdata('pk', 'export_format')
+
+    def test_share_call(self):
+        self.xlsmgr.share('pk', 'username', 'role')
+        self.conn.post.assert_called_with(
+            '/some/path/pk/share', {'username': 'username'})
+
+    def test_clone_to_user_call(self):
+        self.xlsmgr.clone_to_user('pk', 'username')
+        self.conn.post.assert_called_with(
+            '{}/pk/clone'.format(self.path), 'username=username')
