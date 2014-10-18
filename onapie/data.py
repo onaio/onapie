@@ -42,6 +42,6 @@ class DataManager(object):
             self.conn.delete('{}/{}/{}/labels/{}'.format(
                 self.data_ep, pk, data_id, tag_name)).text)
 
-    def get_enketo_editlink(self, pk, dataid):
+    def get_enketo_editlink(self, pk, dataid, return_url):
         return json.loads(self.conn.get(
-            '{}/{}/{}/enketo'.format(self.data_ep, pk, dataid)).text)
+            '{}/{}/{}/enketo?return_url={}'.format(self.data_ep, pk, dataid, return_url)).text)
