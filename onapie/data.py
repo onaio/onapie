@@ -44,4 +44,5 @@ class DataManager(object):
 
     def get_enketo_editlink(self, pk, dataid, return_url):
         return json.loads(self.conn.get(
-            '{}/{}/{}/enketo?return_url={}'.format(self.data_ep, pk, dataid, return_url)).text)
+            '{}/{}/{}/enketo?return_url={}'.format(
+                self.data_ep, pk, dataid, return_url)).text)

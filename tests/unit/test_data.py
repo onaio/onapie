@@ -52,6 +52,7 @@ class DataManagerTestCase(unittest.TestCase):
             '{}/pk/data_id/labels/tag'.format(self.path))
 
     def test_get_enketo_editlink_call(self):
-        self.datamgr.get_enketo_editlink('pk', 'dataid')
+        return_url = "return_url"
+        self.datamgr.get_enketo_editlink('pk', 'dataid', return_url)
         self.conn.delete.assert_called_with(
-            '{}/pk/dataid/enketo'.format(self.path))
+            '{}/pk/dataid/enketo?return_url={}'.format(self.path, return_url))
