@@ -71,6 +71,18 @@ class XlsFormsManager(object):
         else:
             return json.loads(self.conn.get(path).text)
 
+    def export(self, pk, data_format=None):
+        path = '{}/{}'.format(self.forms_ep, pk)
+        if data_format is not None:
+            if data_format not in ['json', 'xml', 'xls', 'csv']:
+                raise ClientException(
+                    'Invalid representation:- {}. Options are '
+                    'json, csv, xml or xls'.format(data_format))
+            path = '{}.{}'.format(path, data_format)
+
+        if data_format and data_format != 'json':
+            return self.conn.get(path).text
+
     def update(self, pk, uuid, description, owner, public, public_data):
         """Update Form"""
 

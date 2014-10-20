@@ -131,3 +131,9 @@ class XlsFormsManagerTestCase(unittest.TestCase):
         self.xlsmgr.clone_to_user('pk', 'username')
         self.conn.post.assert_called_with(
             '{}/pk/clone'.format(self.path), 'username=username')
+
+    def test_export_form_with_format(self):
+        rep = choice(['csv', 'xml', 'xls'])
+        self.xlsmgr.export('pk', rep)
+        self.conn.get.assert_called_with(
+            '{}/pk.{}'.format(self.path, rep))
