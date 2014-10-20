@@ -80,8 +80,7 @@ class XlsFormsManager(object):
                     'json, csv, xml or xls'.format(data_format))
             path = '{}.{}'.format(path, data_format)
 
-        if data_format and data_format != 'json':
-            return self.conn.get(path).text
+        return self.conn.get(path).text
 
     def update(self, pk, uuid, description, owner, public, public_data):
         """Update Form"""
