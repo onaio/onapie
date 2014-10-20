@@ -53,10 +53,10 @@ class XlsFormsManager(object):
         path = '{}/{}'.format(self.forms_ep, pk)
 
         if representation is not None:
-            if representation not in ['json', 'xml', 'xls']:
+            if representation not in ['json', 'xml', 'xls', 'csv']:
                 raise ClientException(
                     'Invalid representation:- {}. Options are '
-                    'json, xml or xls'.format(representation))
+                    'json, csv, xml or xls'.format(representation))
             path = '{}/form.{}'.format(path, representation)
 
         if any(tag_args):

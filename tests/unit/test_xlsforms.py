@@ -61,7 +61,7 @@ class XlsFormsManagerTestCase(unittest.TestCase):
             self.xlsmgr.get('pk', 'invalid_repr')
 
     def test_get_form_representation_call(self):
-        rep = choice(['json', 'xml', 'xls'])
+        rep = choice(['json', 'xml', 'xls', 'csv'])
         self.xlsmgr.get('pk', rep)
         self.conn.get.assert_called_with(
             '{}/pk/form.{}'.format(self.path, rep))
