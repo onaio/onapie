@@ -66,7 +66,10 @@ class XlsFormsManager(object):
 
             path = '{}?tags={}'.format(path, tags)
 
-        return json.loads(self.conn.get(path).text)
+        if representation and representation != 'json':
+            return self.conn.get(path).text
+        else:
+            return json.loads(self.conn.get(path).text)
 
     def update(self, pk, uuid, description, owner, public, public_data):
         """Update Form"""
