@@ -53,10 +53,10 @@ class XlsFormsManager(object):
         path = '{}/{}'.format(self.forms_ep, pk)
 
         if representation is not None:
-            if representation not in ['json', 'xml', 'xls']:
+            if representation not in ['json', 'xml', 'xls', 'csv']:
                 raise ClientException(
                     'Invalid representation:- {}. Options are '
-                    'json, xml or xls'.format(representation))
+                    'json, csv, xml or xls'.format(representation))
             path = '{}/form.{}'.format(path, representation)
 
         if any(tag_args):
@@ -66,7 +66,21 @@ class XlsFormsManager(object):
 
             path = '{}?tags={}'.format(path, tags)
 
-        return json.loads(self.conn.get(path).text)
+        if representation and representation != 'json':
+            return self.conn.get(path).text
+        else:
+            return json.loads(self.conn.get(path).text)
+
+    def export(self, pk, data_format=None):
+        path = '{}/{}'.format(self.forms_ep, pk)
+        if data_format is not None:
+            if data_format not in ['json', 'xml', 'xls', 'csv']:
+                raise ClientException(
+                    'Invalid representation:- {}. Options are '
+                    'json, csv, xml or xls'.format(data_format))
+            path = '{}.{}'.format(path, data_format)
+
+        return self.conn.get(path).text
 
     def update(self, pk, uuid, description, owner, public, public_data):
         """Update Form"""

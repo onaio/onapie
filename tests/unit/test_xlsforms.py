@@ -61,7 +61,7 @@ class XlsFormsManagerTestCase(unittest.TestCase):
             self.xlsmgr.get('pk', 'invalid_repr')
 
     def test_get_form_representation_call(self):
-        rep = choice(['json', 'xml', 'xls'])
+        rep = choice(['json', 'xml', 'xls', 'csv'])
         self.xlsmgr.get('pk', rep)
         self.conn.get.assert_called_with(
             '{}/pk/form.{}'.format(self.path, rep))
@@ -131,3 +131,9 @@ class XlsFormsManagerTestCase(unittest.TestCase):
         self.xlsmgr.clone_to_user('pk', 'username')
         self.conn.post.assert_called_with(
             '{}/pk/clone'.format(self.path), 'username=username')
+
+    def test_export_form_with_format(self):
+        rep = choice(['csv', 'xml', 'xls'])
+        self.xlsmgr.export('pk', rep)
+        self.conn.get.assert_called_with(
+            '{}/pk.{}'.format(self.path, rep))
