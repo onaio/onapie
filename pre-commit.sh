@@ -2,7 +2,7 @@
 git stash -q --keep-index
 
 FILES_PATTERN='\.py(\..+)?$'
-FORBIDDEN='import\spdb'
+FORBIDDEN='import\s*\S*pdb'
 git diff --cached --name-only | \
     grep -E $FILES_PATTERN | \
     GREP_COLOR='4;5;37;41' xargs grep --color --with-filename -n $FORBIDDEN && \
