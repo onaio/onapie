@@ -22,19 +22,27 @@ class DataManager(object):
 
         return json.loads(self.conn.get(query).text)
 
-    def get(self, pk, dataid=None, *tag_args, **query_kwargs):
+    def get(self, pk, dataid=None, tags=None, query=None,
+            sort=None, start=None, limit=None):
         """Get submitted data for a given form"""
         path = '{}/{}'.format(self.data_ep, pk)
         if dataid is not None:
             path = '{}/{}'.format(path, dataid)
-        elif any(query_kwargs):
-            path = '{}?query={}'.format(path, json.dumps(query_kwargs))
-        elif any(tag_args):
-            tags = tag_args[0]
-            for tag in tag_args[1:]:
-                tags = '{},{}'.format(tags, tag)
-            path = '{}?tags={}'.format(path, tags)
+        params_format = '{}={}'
+        params = []
+        if query:
+            params.append(params_format.format('query', json.dumps(query)))
+        elif tags:
+            params.append(params_format.format('tags', ','.join(tags)))
+        if(start):
+            params.append(params_format.format('start', start))
+        if(limit):
+            params.append(params_format.format('limit', limit))
+        if(sort):
+            params.append(params_format.format('sort', json.dumps(sort)))
 
+        if(params):
+            path = '{}?{}'.format(path, '&'.join(params))
         return json.loads(self.conn.get(path).text)
 
     def delete_tag(self, pk, data_id, tag_name):
