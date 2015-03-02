@@ -26,17 +26,17 @@ class Client(object):
             self.set_api_token(self.api_token)
 
         if kwargs.get('fetch_catalog', True):
-            self.fetch_catalog()
+            self.fetch_catalog(**kwargs)
 
-    def fetch_catalog(self):
-        self.catalog = json.loads(self.conn.get(self.api_entrypoint).text)
+    def fetch_catalog(self, **kwargs):
+        # self.catalog = json.loads(self.conn.get(self.api_entrypoint).text)
 
         self.forms = XlsFormsManager(
-            self.conn, urlparse(self.catalog.get('forms')).path)
+            self.conn, urlparse(kwargs.get('forms_url', 'https://ona.io/api/v1/forms')).path)
         self.data = DataManager(
-            self.conn, urlparse(self.catalog.get('data')).path)
+            self.conn, urlparse(kwargs.get('data_url', 'https://ona.io/api/v1/data')).path)
         self.stats = StatsManager(
-            self.conn, urlparse(self.catalog.get('stats')).path)
+            self.conn, urlparse(kwargs.get('stats_url', 'https://ona.io/api/v1/stats')).path)
 
     def authenticate(self, username, password):
         self.api_token = json.loads(
