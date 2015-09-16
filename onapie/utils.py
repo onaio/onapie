@@ -1,7 +1,8 @@
-from exceptions import ApiException
-from exceptions import ClientException
 import requests
 from urlparse import urlparse
+
+from onapie.exceptions import ApiException
+from onapie.exceptions import ClientException
 
 
 class Connection(object):
