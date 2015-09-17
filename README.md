@@ -34,8 +34,8 @@ Get submitted data for a given form:-
 
 ####Contributing
 - [Fork and] create a branch named according to the feature you want to work on  
-- Clone your new repo & cCreate a virtualenv for that
-- Install the dev deps: `pip install -r dev-requiremets.txt`
+- Clone your new repo & create a virtualenv for that
+- Install the dev deps: `pip install -r dev-requirements.txt`
 - Setup the pre-commit Hook: `ln -s ../../pre-commit.sh .git/hooks/pre-commit`
 - Contribute/Develop/Hack
 - Send a pull request against the [develop][2] branch

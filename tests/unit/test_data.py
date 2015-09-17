@@ -37,14 +37,24 @@ class DataManagerTestCase(unittest.TestCase):
         self.conn.get.assert_called_with('{}/pk/datum_id'.format(self.path))
 
     def test_get_data_by_query_call(self):
-        self.datamgr.get('pk', None, foo1='bar1', foo2='bar2')
+        self.datamgr.get('pk', None, query=dict(foo1='bar1', foo2='bar2'))
         self.conn.get.assert_called_with(
             '%s/pk?query={"foo1": "bar1", "foo2": "bar2"}' % (self.path))
 
     def test_get_data_by_tag_call(self):
-        self.datamgr.get('pk', None, 'foo1', 'bar1', 'foo2', 'bar2')
+        self.datamgr.get('pk', None, tags=['foo1', 'bar1', 'foo2', 'bar2'])
         self.conn.get.assert_called_with(
             '{}/pk?tags=foo1,bar1,foo2,bar2'.format(self.path))
+
+    def test_get_data_with_start_and_limit(self):
+        self.datamgr.get('pk', None, start=21, limit=10)
+        self.conn.get.assert_called_with(
+            '%s/pk?start=21&limit=10' % (self.path))
+
+    def test_get_data_with_sort(self):
+        self.datamgr.get('pk', None, sort={'_id': 1})
+        self.conn.get.assert_called_with(
+            '%s/pk?sort={"_id": 1}' % (self.path))
 
     def test_delete_data_tag_call(self):
         self.datamgr.delete_tag('pk', 'data_id', 'tag')
