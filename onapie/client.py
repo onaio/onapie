@@ -14,7 +14,7 @@ class Client(object):
         username = kwargs.get('username', None)
         password = kwargs.get('password', None)
         self.api_token = kwargs.get('api_token', None)
-        self.api_entrypoint = kwargs.get('api_entrypoint', '/api/v1')
+        self.api_entrypoint = kwargs.get('api_entrypoint', '/api/v1/')
         auth_path = kwargs.get('auth_path', '/user')
         self.auth_path = '{}{}'.format(self.api_entrypoint, auth_path)
 
