@@ -1,12 +1,12 @@
 Python bindings to the [OnaData][1] API
 =====================
-This repo contains the sources for the OnaData python client library. 
+This repo contains the sources for the OnaData python client library.
 You can read more about OnaData [here][1]
 
 #### Installation
 
 ```sh
-pip install git+https://github.com/onaio/onaie.git
+pip install git+https://github.com/onaio/onapie.git
 ```
 
 OR as a [pip editable](http://pip.readthedocs.org/en/latest/reference/pip_install.html#editable-installs) if you'd like to develop this in parallel with your project:-  
