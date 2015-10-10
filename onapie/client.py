@@ -18,7 +18,7 @@ class Client(object):
         self.api_token = kwargs.get('api_token', None)
         self.api_entrypoint = kwargs.get('api_entrypoint', '/api/v1/')
         auth_path = kwargs.get('auth_path', 'user')
-        self.auth_path = os.path.join(self.api_entrypoint,auth_path)
+        self.auth_path = os.path.join(self.api_entrypoint, auth_path)
 
         self.conn = ConnectionSingleton(self.api_addr, **kwargs)
 
