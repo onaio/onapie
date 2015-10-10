@@ -7,8 +7,6 @@ from onapie.utils import ConnectionSingleton
 from urlparse import urlparse
 from requests.auth import HTTPDigestAuth
 
-
-
 class Client(object):
 
     def __init__(self, api_addr, **kwargs):
