@@ -21,13 +21,13 @@ pip install -e git://github.com/onaio/onapie.git#egg=onapie
 
 ```python
 from onapie.client import Client
-client = Client('https://ona.io', username='your_ona_username', password='S00p3rS3kret')
+client = Client('https://api.ona.io', username='your_ona_username', password='S00p3rS3kret')
 ```
 
 or if you prefer to use your api_token:-  
 
 ```python
-client = Client('https://ona.io', api_token='your_ona_api_token')
+client = Client('https://api.ona.io', api_token='your_ona_api_token')
 ```
 
 ***Working with forms***  
