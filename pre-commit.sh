@@ -1,4 +1,9 @@
+#!/bin/sh
 # pre-commit.sh
+# Check flake8
+echo "Flake8 running. Fix the errors below"
+find . -iname "*.py" |grep -v setup.py | xargs flake8 --max-complexity=10
+
 git stash -q --keep-index
 
 FILES_PATTERN='\.py(\..+)?$'
@@ -13,3 +18,4 @@ RESULT=$?
 git stash pop -q
 [ $RESULT -ne 0 ] && exit 1
 exit 0
+
