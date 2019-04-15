@@ -1,8 +1,13 @@
 import requests
-from urlparse import urlparse
 
 from onapie.exceptions import ApiException
 from onapie.exceptions import ClientException
+
+
+try:
+    from urllib.parse import urlparse  # NOQA
+except ImportError:
+    from urlparse import urlparse  # NOQA
 
 
 class Connection(object):
