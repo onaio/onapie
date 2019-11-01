@@ -4,14 +4,13 @@ from onapie.xlsforms import XlsFormsManager
 from onapie.data import DataManager
 from onapie.stats import StatsManager
 from onapie.utils import ConnectionSingleton
-from urllib.parse import urlparse
 from requests.auth import HTTPDigestAuth
 
 
 try:
     from urllib.parse import urlparse  # NOQA
 except ImportError:
-    from urlparse import urlparse # NOQA
+    from urlparse import urlparse  # NOQA
 
 
 class Client(object):
